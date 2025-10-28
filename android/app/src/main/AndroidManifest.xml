@@ -1,0 +1,159 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ========================================== -->
+    <!-- PERMISSIONS RÉSEAU (http, dio, url_launcher) -->
+    <!-- ========================================== -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    
+    <!-- ========================================== -->
+    <!-- PERMISSIONS GÉOLOCALISATION (geolocator, flutter_map) -->
+    <!-- ========================================== -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    
+    <!-- ========================================== -->
+    <!-- PERMISSIONS CAMÉRA (mobile_scanner - QR Code) -->
+    <!-- ========================================== -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- ========================================== -->
+    <!-- PERMISSIONS STOCKAGE (path_provider, share_plus, cached_network_image) -->
+    <!-- ========================================== -->
+    <!-- Android 12 et inférieur -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Android 13+ (API 33+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    
+    <!-- ========================================== -->
+    <!-- PERMISSIONS WEBVIEW (webview_flutter - OAuth) -->
+    <!-- ========================================== -->
+    <!-- Permissions implicites via INTERNET déjà déclaré -->
+    
+    <!-- ========================================== -->
+    <!-- PERMISSIONS URL LAUNCHER (ouvrir navigateur externe) -->
+    <!-- ========================================== -->
+    <!-- Permission pour requêtes de packages (Android 11+) -->
+    
+    <!-- ========================================== -->
+    <!-- DÉCLARATION DES FONCTIONNALITÉS MATÉRIELLES -->
+    <!-- ========================================== -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    
+    <application
+        android:label="jirig"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            
+            <!-- ========================================== -->
+            <!-- DEEP LINKS: Deep links personnalisés et HTTPS -->
+            <!-- ========================================== -->
+            <!-- Intent filter pour capturer les magic links HTTPS (depuis email) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                
+                <!-- Capturer les liens https://jirig.be/connexion -->
+                <data
+                    android:scheme="https"
+                    android:host="jirig.be"
+                    android:pathPrefix="/connexion"/>
+            </intent-filter>
+            
+            <!-- Intent filter pour capturer les deep links OAuth callback -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                
+                <!-- Capturer les liens jirig://oauth/callback (pour compatibilité future) -->
+                <data
+                    android:scheme="jirig"
+                    android:host="oauth"
+                    android:pathPrefix="/callback"/>
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- ========================================== -->
+    <!-- QUERIES POUR ANDROID 11+ (Package Visibility) -->
+    <!-- ========================================== -->
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility -->
+    <queries>
+        <!-- Query pour url_launcher: ouvrir des URLs dans le navigateur -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        
+        <!-- Query pour share_plus: partager du contenu -->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+        
+        <!-- Query pour email -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+        
+        <!-- Query pour téléphone -->
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+        
+        <!-- Query pour SMS -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="sms" />
+        </intent>
+        
+        <!-- Query pour le traitement de texte (Flutter engine) -->
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation du lien magique - Jirig</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0058A3 0%, #0078D4 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .container {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #0058A3;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .button {
+            background: #0058A3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 8px;
+            transition: background 0.2s;
+        }
+        
+        .button:hover {
+            background: #004494;
+        }
+        
+        .button.secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .button.secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0058A3;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .email-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">📧</div>
+        <h1>Lien magique reçu !</h1>
+        <p>Votre lien de connexion a été validé. Voulez-vous ouvrir l'application ?</p>
+        
+        <div class="email-info" id="emailInfo">
+            <!-- L'email sera affiché ici -->
+        </div>
+        
+        <button class="button" onclick="openApp()">
+            Ouvrir l'application
+        </button>
+        
+        <a href="https://jirig.be" class="button secondary">
+            Continuer sur le site
+        </a>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Ouverture de l'application...</p>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les paramètres de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email') || '';
+        const token = urlParams.get('token') || '';
+        const redirectUrl = urlParams.get('redirect') || '/wishlist';
+        
+        console.log('Magic Link Callback - Email:', email);
+        console.log('Magic Link Callback - Token:', token);
+        console.log('Magic Link Callback - Redirect:', redirectUrl);
+        
+        // Afficher l'email dans l'interface
+        const emailInfo = document.getElementById('emailInfo');
+        if (email) {
+            emailInfo.innerHTML = `<strong>Email:</strong> ${email}`;
+        } else {
+            emailInfo.style.display = 'none';
+        }
+        
+        // Détecter si c'est un appareil mobile
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // Détecter si c'est une app web (PWA ou dans un navigateur mobile)
+        function isWebApp() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true ||
+                   document.referrer.includes('localhost') ||
+                   window.location.hostname === 'localhost';
+        }
+        
+        function openApp() {
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            
+            if (isMobile() && !isWebApp()) {
+                // Sur mobile natif, essayer d'ouvrir l'app via deep link
+                const deepLink = `jirig://magic-login?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}&callBackUrl=${encodeURIComponent(redirectUrl)}`;
+                
+                console.log('Tentative d\'ouverture de l\'app mobile:', deepLink);
+                
+                // Créer un lien invisible pour déclencher le deep link
+                const link = document.createElement('a');
+                link.href = deepLink;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Si l'app ne s'ouvre pas dans 3 secondes, proposer de télécharger
+                setTimeout(() => {
+                    if (confirm('L\'application ne semble pas s\'être ouverte. Voulez-vous la télécharger ?')) {
+                        window.open('https://play.google.com/store/apps/details?id=com.jirig.app', '_blank');
+                    }
+                }, 3000);
+            } else {
+                // Sur web ou PWA, rediriger vers l'app web
+                console.log('Redirection vers l\'app web:', redirectUrl);
+                window.location.href = redirectUrl;
+            }
+        }
+        
+        // Adapter l'interface selon le contexte
+        function adaptInterface() {
+            const container = document.querySelector('.container');
+            const button = document.querySelector('.button');
+            const secondaryButton = document.querySelector('.button.secondary');
+            
+            if (isWebApp()) {
+                // Si c'est l'app web, changer les textes
+                document.querySelector('h1').textContent = 'Lien magique validé !';
+                document.querySelector('p').textContent = 'Vous allez être redirigé vers l\'application...';
+                button.textContent = 'Continuer dans l\'app';
+                secondaryButton.style.display = 'none';
+                
+                // Rediriger automatiquement
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 2000);
+            } else if (isMobile()) {
+                // Si c'est mobile, garder l'interface actuelle
+                button.textContent = 'Ouvrir l\'application';
+            } else {
+                // Si c'est un navigateur desktop, proposer l'app web
+                document.querySelector('h1').textContent = 'Lien magique validé !';
+                document.querySelector('p').textContent = 'Voulez-vous continuer sur l\'application web Jirig ?';
+                button.textContent = 'Continuer sur l\'app web';
+                secondaryButton.textContent = 'Télécharger l\'app mobile';
+                secondaryButton.onclick = () => {
+                    window.open('https://play.google.com/store/apps/details?id=com.jirig.app', '_blank');
+                };
+            }
+        }
+        
+        // Adapter l'interface au chargement
+        document.addEventListener('DOMContentLoaded', adaptInterface);
+        
+        // Essayer d'ouvrir l'app automatiquement après 2 secondes (mobile seulement)
+        if (isMobile() && !isWebApp()) {
+            setTimeout(() => {
+                if (confirm('Voulez-vous ouvrir l\'application Jirig maintenant ?')) {
+                    openApp();
+                }
+            }, 2000);
+        } else if (isWebApp()) {
+            // Pour l'app web, rediriger automatiquement
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

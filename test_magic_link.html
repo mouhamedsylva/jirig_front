@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Magic Link - Jirig</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #0058A3;
+            margin-top: 0;
+            font-size: 28px;
+        }
+        
+        .info {
+            background: #f0f9ff;
+            border-left: 4px solid #0058A3;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        
+        .link-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0058A3 0%, #3B82F6 100%);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 12px 0;
+            box-shadow: 0 4px 12px rgba(0, 88, 163, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .link-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 88, 163, 0.4);
+        }
+        
+        .link-button:active {
+            transform: translateY(0);
+        }
+        
+        .steps {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .steps ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+        
+        .steps li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        
+        .code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        
+        .emoji {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="emoji">🔗</span>Test Magic Link - Jirig</h1>
+        
+        <div class="info">
+            <strong>📱 Instructions :</strong>
+            <p style="margin: 8px 0 0 0;">
+                Ouvrez cette page sur votre téléphone Android et cliquez sur le bouton ci-dessous.
+                L'application Jirig devrait s'ouvrir automatiquement.
+            </p>
+        </div>
+        
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="https://jirig.be/connexion?email=test@example.com&token=ECE7E50F-0EF5-40F9-8DF8-4441264E3A23&callBackUrl=%2Fwishlist%2F0x020000003C2AB5591859F09ACCF2C09CEF56EE540EEAC2E5" 
+               class="link-button">
+                🔐 Tester le Magic Link
+            </a>
+        </div>
+        
+        <div class="steps">
+            <strong>Étapes attendues :</strong>
+            <ol>
+                <li>Cliquez sur le bouton ci-dessus</li>
+                <li>Android affiche : "Ouvrir avec Jirig / Navigateur"</li>
+                <li>Choisissez "Jirig"</li>
+                <li>L'app s'ouvre</li>
+                <li>Un dialogue s'affiche : "Souhaitez-vous ouvrir ce lien ?"</li>
+                <li>Cliquez sur "Oui"</li>
+                <li>Vous voyez l'écran de validation du Magic Link</li>
+                <li>Connexion automatique et redirection</li>
+            </ol>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Important :</strong>
+            <p style="margin: 8px 0 0 0;">
+                Ce lien de test utilise un token fictif. Pour tester avec un vrai token,
+                demandez un lien magique depuis l'application et utilisez le lien reçu par email.
+            </p>
+        </div>
+        
+        <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+        
+        <h2 style="color: #0058A3; font-size: 20px;">📊 Détails du lien</h2>
+        
+        <div class="code">
+https://jirig.be/connexion?
+  email=test@example.com&
+  token=ECE7E50F-0EF5-40F9-8DF8-4441264E3A23&
+  callBackUrl=%2Fwishlist%2F0x020000003C2AB5591859F09ACCF2C09CEF56EE540EEAC2E5
+        </div>
+        
+        <p style="color: #64748b; font-size: 14px; margin-top: 24px;">
+            <strong>Paramètres :</strong>
+        </p>
+        <ul style="color: #64748b; font-size: 14px;">
+            <li><strong>email</strong> : test@example.com</li>
+            <li><strong>token</strong> : ECE7E50F-0EF5-40F9-8DF8-4441264E3A23</li>
+            <li><strong>callBackUrl</strong> : /wishlist/0x020000003C2AB5591859F09ACCF2C09CEF56EE540EEAC2E5</li>
+        </ul>
+        
+        <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+        
+        <h2 style="color: #0058A3; font-size: 20px;">🛠️ Test via ADB</h2>
+        
+        <p style="color: #64748b; font-size: 14px;">
+            Si vous avez accès à ADB, vous pouvez tester depuis votre ordinateur :
+        </p>
+        
+        <div class="code">
+adb shell am start -W -a android.intent.action.VIEW \
+  -d "https://jirig.be/connexion?email=test@example.com&token=ECE7E50F-0EF5-40F9-8DF8-4441264E3A23&callBackUrl=%2Fwishlist%2F0x020000003C2AB5591859F09ACCF2C09CEF56EE540EEAC2E5"
+        </div>
+        
+        <p style="text-align: center; margin-top: 32px; color: #94a3b8; font-size: 12px;">
+            Jirig - Application de comparaison de prix IKEA
+        </p>
+    </div>
+</body>
+</html>
+
